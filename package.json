@@ -1,7 +1,8 @@
 {
   "name": "json-bufferify",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "main": "json-bufferify.js",
+  "types": "json-bufferify.d.ts",
   "description": "Convert JSON to ArrayBuffer and Revert ArrayBuffer to JSON.",
   "author": "LangZhai (智能小菜菜)",
   "license": "LGPL-3.0+",
