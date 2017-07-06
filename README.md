@@ -31,8 +31,8 @@ __In browser__
 
 __In TypeScript__
 
-```
-npm install @types/json-bufferify --save
+```javascript
+import bufferify = require('json-bufferify');
 ```
 
 __In Egret__
