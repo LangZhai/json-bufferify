@@ -3,13 +3,22 @@
   "version": "0.0.1",
   "main": "json-bufferify.js",
   "description": "Convert JSON to ArrayBuffer and Revert ArrayBuffer to JSON.",
+  "author": "LangZhai (智能小菜菜)",
+  "license": "LGPL-3.0+",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "LangZhai",
-  "license": "LGPL-3.0+",
   "repository": {
     "type": "git",
-    "url": "https://github.com/LangZhai/nodejs-exercises/tree/master/modules/json-bufferify"
-  }
+    "url": "git+https://github.com/LangZhai/json-bufferify.git"
+  },
+  "keywords": [
+    "JSON",
+    "ArrayBuffer",
+    "bufferify"
+  ],
+  "bugs": {
+    "url": "https://github.com/LangZhai/json-bufferify/issues"
+  },
+  "homepage": "https://github.com/LangZhai/json-bufferify#readme"
 }
