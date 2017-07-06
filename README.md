@@ -1,6 +1,6 @@
 # json-bufferify
 
-This is a module can run in both Node.js and browser.
+This is a module to help you convert between JSON and ArrayBuffer, and you can run it in both Node.js and browser.
 
 ## Feature
 
