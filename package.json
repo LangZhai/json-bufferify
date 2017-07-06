@@ -1,11 +1,11 @@
 {
   "name": "json-bufferify",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "json-bufferify.js",
   "types": "json-bufferify.d.ts",
   "description": "This is a module to help you convert between JSON and ArrayBuffer, and you can run it in both Node.js and browser.",
   "author": {
-    "name": "LangZhai(智能小菜菜)",
+    "name": "LangZhai",
     "url": "https://langzhai.github.io"
   },
   "license": "LGPL-3.0+",
