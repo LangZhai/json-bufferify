@@ -1,5 +1,5 @@
 /**
- * json-bufferify 0.0.3
+ * json-bufferify 0.0.4
  * Date: 2017-07-06
  * © 2017 LangZhai(智能小菜菜)
  * This is licensed under the GNU LGPL, version 3 or later.
@@ -42,7 +42,7 @@
      */
     let encode = (offset, data) => {
         let arr = [],
-            view = new DataView(new ArrayBuffer(_encode(1, arr, data)));
+            view = new DataView(new ArrayBuffer(_encode(offset, arr, data)));
         arr.forEach(item => {
             view[`set${item.type}`](item.offset, item.val);
         });
