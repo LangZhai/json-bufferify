@@ -9,6 +9,6 @@
 
 declare namespace bufferify {
     export function encode(offset: number, data: Object): DataView;
-    export function decode(offset: number, obj: Object, source: ArrayBuffer): number;
-    export function decode(offset: number, obj: Object, source: DataView): number;
+    export function decode(offset: number, template: Object, source: ArrayBuffer): number;
+    export function decode(offset: number, template: Object, source: DataView): number;
 }
