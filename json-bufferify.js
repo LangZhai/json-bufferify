@@ -23,11 +23,7 @@
         }
         val.forEach((obj) => {
             if (obj instanceof Object) {
-                for (let key in obj) {
-                    if (obj.hasOwnProperty(key)) {
-                        val[0][key] = deep ? extend(deep, {}, obj[key]) : obj[key];
-                    }
-                }
+                Object.keys(obj).forEach(item => val[0][item] = deep ? extend(deep, {}, obj[item]) : obj[item]);
             } else {
                 val[0] = obj;
             }
