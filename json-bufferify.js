@@ -179,66 +179,69 @@
     /**
      * Revert ArrayBuffer to JSON.
      * @param {number} offset The start of the DataView where to read the data.
-     * @param {any} obj The template of the JSON.
+     * @param {Object} obj The template of the JSON.
      * @param {ArrayBuffer|Buffer|DataView} source The ArrayBuffer, or the Buffer in Node.js, or the DataView of the ArrayBuffer.
      */
     let decode = (offset, obj, source) => {
-        let view = source instanceof DataView ? source : new DataView(source instanceof ArrayBuffer ? source : new Uint8Array(source).buffer);
-        if (obj instanceof Array) {
-            obj.length = view.getUint8(offset++);
-            obj.join().split(',').forEach((item, i) => obj[i] = extend(true, {}, obj[0]));
-        }
-        if (obj instanceof Array && obj[0] instanceof Object) {
-            obj.forEach(item => offset = decode(offset, item, view));
-        } else {
-            Object.keys(obj).sort().forEach(item => {
-                if (obj[item] instanceof Object) {
-                    offset = decode(offset, obj[item], view);
-                } else if (obj[item] === 'number') {
-                    switch (view.getUint8(offset++)) {
-                        case 0:
-                            obj[item] = view.getUint8(offset);
-                            offset += 1;
-                            break;
-                        case 1:
-                            obj[item] = view.getInt8(offset);
-                            offset += 1;
-                            break;
-                        case 2:
-                            obj[item] = view.getUint16(offset);
+        let view;
+        if (obj instanceof Object) {
+            view = source instanceof DataView ? source : new DataView(source instanceof ArrayBuffer ? source : new Uint8Array(source).buffer);
+            if (obj instanceof Array) {
+                obj.length = view.getUint8(offset++);
+                obj.join().split(',').forEach((item, i) => obj[i] = extend(true, {}, obj[0]));
+            }
+            if (obj instanceof Array && obj[0] instanceof Object) {
+                obj.forEach(item => offset = decode(offset, item, view));
+            } else {
+                Object.keys(obj).sort().forEach(item => {
+                    if (obj[item] instanceof Object) {
+                        offset = decode(offset, obj[item], view);
+                    } else if (obj[item] === 'number') {
+                        switch (view.getUint8(offset++)) {
+                            case 0:
+                                obj[item] = view.getUint8(offset);
+                                offset += 1;
+                                break;
+                            case 1:
+                                obj[item] = view.getInt8(offset);
+                                offset += 1;
+                                break;
+                            case 2:
+                                obj[item] = view.getUint16(offset);
+                                offset += 2;
+                                break;
+                            case 3:
+                                obj[item] = view.getInt16(offset);
+                                offset += 2;
+                                break;
+                            case 4:
+                                obj[item] = view.getUint32(offset);
+                                offset += 4;
+                                break;
+                            case 5:
+                                obj[item] = view.getInt32(offset);
+                                offset += 4;
+                                break;
+                            case 6:
+                                obj[item] = view.getFloat32(offset);
+                                offset += 4;
+                                break;
+                            case 7:
+                                obj[item] = view.getFloat64(offset);
+                                offset += 8;
+                                break;
+                        }
+                    } else {
+                        obj[item] = String.fromCharCode.apply(null, new Array(view.getUint8(offset++)).join().split(',').map(() => {
+                            let code = view.getUint16(offset);
                             offset += 2;
-                            break;
-                        case 3:
-                            obj[item] = view.getInt16(offset);
-                            offset += 2;
-                            break;
-                        case 4:
-                            obj[item] = view.getUint32(offset);
-                            offset += 4;
-                            break;
-                        case 5:
-                            obj[item] = view.getInt32(offset);
-                            offset += 4;
-                            break;
-                        case 6:
-                            obj[item] = view.getFloat32(offset);
-                            offset += 4;
-                            break;
-                        case 7:
-                            obj[item] = view.getFloat64(offset);
-                            offset += 8;
-                            break;
+                            return code;
+                        }));
                     }
-                } else {
-                    obj[item] = String.fromCharCode.apply(null, new Array(view.getUint8(offset++)).join().split(',').map(() => {
-                        let code = view.getUint16(offset);
-                        offset += 2;
-                        return code;
-                    }));
-                }
-            });
+                });
+            }
+            return offset;
         }
-        return offset;
     };
 
     bufferify.encode = encode;
