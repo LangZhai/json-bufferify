@@ -14,11 +14,19 @@ console.log(bufferify.decode(0, ['number'], bufferify.encode(0, [1, 2, 3, 4, 5, 
 
 console.log(bufferify.decode(0, {
     arr: ['number'],
+    obj: {
+        opcode: 'number',
+        info: 'string'
+    },
     list: [{
         id: 'string',
         name: 'string'
     }]
 }, bufferify.encode(0, {
+    obj: {
+        opcode: 8,
+        info: 'Hello'
+    },
     arr: [1, 2, 3, 4, 5],
     list: [{
         name: 'Jerry',
