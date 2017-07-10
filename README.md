@@ -4,7 +4,7 @@ This is a module to help you convert between JSON and ArrayBuffer, and you can r
 
 ## Feature
 
-* Convert JSON to ArrayBuffer and return the DataView.
+* Convert JSON to ArrayBuffer.
 * Revert ArrayBuffer to JSON.
 
 ## Installation
@@ -49,19 +49,16 @@ Open "egretProperties.json" and Add the following code to "modules" node.
 ### Convert JSON to ArrayBuffer and send by WebSocket.
 
 ```javascript
-var view = bufferify.encode(0, { name: 'Bob', sex: 0, age: 25 });
 var ws = new WebSocket(url);
 ws.binaryType = 'arraybuffer';
-ws.send(view);
+ws.send(bufferify.encode(0, { name: 'Bob', sex: 0, age: 25 }));
 ```
 
 ### Revert ArrayBuffer to JSON.
 
 ```javascript
 ws.on('message', (data) => {
-    var obj = { name: 'string', sex: 'number', age: 'number' };
-    bufferify.decode(0, obj, data);
-    console.log(obj);
+    console.log(bufferify.decode(0, { name: 'string', sex: 'number', age: 'number' }, data));
 });
 ```
 
@@ -74,10 +71,10 @@ Convert JSON to ArrayBuffer and return the DataView.
 * `offset` - The start of the DataView where to store the data.
 * `data` - The JSON data.
 
-### bufferify.decode(offset, obj, source)
+### bufferify.decode(offset, template, source)
 
-Revert ArrayBuffer to JSON.
+Revert ArrayBuffer to JSON data and return it.
 
 * `offset` - The start of the DataView where to read the data.
-* `obj` - The template of the JSON.
+* `template` - The template of the JSON.
 * `source` - The ArrayBuffer, or the Buffer in Node.js, or the DataView of the ArrayBuffer.

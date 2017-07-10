@@ -1,6 +1,6 @@
 /**
- * json-bufferify 0.0.8
- * Date: 2017-07-06
+ * json-bufferify 0.0.9
+ * Date: 2017-07-10
  * © 2017 LangZhai(智能小菜菜)
  * This is licensed under the GNU LGPL, version 3 or later.
  * For details, see: http://www.gnu.org/licenses/lgpl.html
@@ -11,6 +11,7 @@
     /**
      * Extend anything.
      * @param {any} args = ([deep, ]target, source1[, ...sourceN])
+     * @return {any} The result.
      */
     let extend = (...args) => {
         let val,
@@ -32,9 +33,10 @@
     };
 
     /**
-     * Convert JSON to ArrayBuffer and return the DataView.
+     * Convert JSON to ArrayBuffer.
      * @param {number} offset The start of the DataView where to store the data.
      * @param {Object} data The JSON data.
+     * @return {DataView} The DataView of the ArrayBuffer.
      */
     let encode = (offset, data) => {
         let arr = [],
@@ -46,10 +48,11 @@
     }
 
     /**
-     * Convert JSON to ArrayBuffer.
+     * Inner function to Convert JSON to ArrayBuffer.
      * @param {number} offset The start of the DataView where to store the data.
      * @param {Array} arr The data Array which for use in function 'encode'.
      * @param {Object} data The JSON data.
+     * @return {number} The start of the next call.
      */
     let _encode = (offset, arr, data) => {
         if (data instanceof Array) {
@@ -180,9 +183,22 @@
      * Revert ArrayBuffer to JSON.
      * @param {number} offset The start of the DataView where to read the data.
      * @param {Object} template The template of the JSON.
-     * @param {ArrayBuffer|Buffer|DataView} source The ArrayBuffer, or the Buffer in Node.js, or the DataView of the ArrayBuffer.
+     * @param {(ArrayBuffer|Buffer|DataView)} source The ArrayBuffer, or the Buffer in Node.js, or the DataView of the ArrayBuffer.
+     * @return {Object} The JSON data.
      */
     let decode = (offset, template, source) => {
+        _decode(offset, template, source);
+        return template;
+    };
+
+    /**
+     * Inner function to Revert ArrayBuffer to JSON.
+     * @param {number} offset The start of the DataView where to read the data.
+     * @param {Object} template The template of the JSON.
+     * @param {(ArrayBuffer|Buffer|DataView)} source The ArrayBuffer, or the Buffer in Node.js, or the DataView of the ArrayBuffer.
+     * @return {number} The start of the next call.
+     */
+    let _decode = (offset, template, source) => {
         let view;
         if (template instanceof Object) {
             view = source instanceof DataView ? source : new DataView(source instanceof ArrayBuffer ? source : new Uint8Array(source).buffer);
@@ -191,11 +207,11 @@
                 template.join().split(',').forEach((item, i) => template[i] = extend(true, {}, template[0]));
             }
             if (template instanceof Array && template[0] instanceof Object) {
-                template.forEach(item => offset = decode(offset, item, view));
+                template.forEach(item => offset = _decode(offset, item, view));
             } else {
                 Object.keys(template).sort().forEach(item => {
                     if (template[item] instanceof Object) {
-                        offset = decode(offset, template[item], view);
+                        offset = _decode(offset, template[item], view);
                     } else if (template[item] === 'number') {
                         switch (view.getUint8(offset++)) {
                             case 0:
