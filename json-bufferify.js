@@ -1,6 +1,6 @@
 /**
- * json-bufferify 0.0.9
- * Date: 2017-07-10
+ * json-bufferify 0.1.0
+ * Date: 2017-11-10
  * © 2017 LangZhai(智能小菜菜)
  * This is licensed under the GNU LGPL, version 3 or later.
  * For details, see: http://www.gnu.org/licenses/lgpl.html
@@ -202,8 +202,7 @@
         let view;
         if (template instanceof Object) {
             view = source instanceof DataView ? source : new DataView(source instanceof ArrayBuffer ? source : new Uint8Array(source).buffer);
-            if (template instanceof Array) {
-                template.length = view.getUint8(offset++);
+            if (template instanceof Array && (template.length = view.getUint8(offset++))) {
                 template.join().split(',').forEach((item, i) => template[i] = extend(true, {}, template[0]));
             }
             if (template instanceof Array && template[0] instanceof Object) {
@@ -248,11 +247,11 @@
                                 break;
                         }
                     } else {
-                        template[item] = String.fromCharCode.apply(null, new Array(view.getUint8(offset++)).join().split(',').map(() => {
+                        template[item] = template[item] = view.getUint8(offset++) ? String.fromCharCode.apply(null, new Array(template[item]).join().split(',').map(() => {
                             let code = view.getUint16(offset);
                             offset += 2;
                             return code;
-                        }));
+                        })) : '';
                     }
                 });
             }

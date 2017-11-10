@@ -41,3 +41,11 @@ console.log(bufferify.decode(0, {
         name: 'Kevin'
     }]
 })));
+
+console.log(bufferify.decode(0, ['number'], bufferify.encode(0, [])));
+
+console.log(bufferify.decode(0, {
+    str: 'string'
+}, bufferify.encode(0, {
+    str: ''
+})));
