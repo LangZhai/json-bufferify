@@ -1,5 +1,5 @@
 /**
- * json-bufferify 0.1.0
+ * json-bufferify 0.1.1
  * Date: 2017-11-10
  * © 2017 LangZhai(智能小菜菜)
  * This is licensed under the GNU LGPL, version 3 or later.
@@ -247,7 +247,7 @@
                                 break;
                         }
                     } else {
-                        template[item] = template[item] = view.getUint8(offset++) ? String.fromCharCode.apply(null, new Array(template[item]).join().split(',').map(() => {
+                        template[item] = (template[item] = view.getUint8(offset++)) ? String.fromCharCode.apply(null, new Array(template[item]).join().split(',').map(() => {
                             let code = view.getUint16(offset);
                             offset += 2;
                             return code;
