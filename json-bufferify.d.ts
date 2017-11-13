@@ -1,6 +1,6 @@
 /**
- * json-bufferify 0.1.1
- * Date: 2017-11-10
+ * json-bufferify 0.1.2
+ * Date: 2017-11-13
  * © 2017 LangZhai(智能小菜菜)
  * This is licensed under the GNU LGPL, version 3 or later.
  * For details, see: http://www.gnu.org/licenses/lgpl.html

@@ -1,6 +1,6 @@
 /**
- * json-bufferify 0.1.1
- * Date: 2017-11-10
+ * json-bufferify 0.1.2
+ * Date: 2017-11-13
  * © 2017 LangZhai(智能小菜菜)
  * This is licensed under the GNU LGPL, version 3 or later.
  * For details, see: http://www.gnu.org/licenses/lgpl.html
@@ -24,7 +24,7 @@
         }
         val.forEach((obj) => {
             if (obj instanceof Object) {
-                Object.keys(obj).forEach(item => val[0][item] = deep ? extend(deep, {}, obj[item]) : obj[item]);
+                Object.keys(obj).forEach(item => val[0][item] = deep ? extend(deep, obj[item] instanceof Array ? [] : {}, obj[item]) : obj[item]);
             } else {
                 val[0] = obj;
             }
@@ -157,6 +157,12 @@
                             }
                         }
                     }
+                } else if (typeof data[item] === 'boolean') {
+                    arr.push({
+                        val: data[item] ? 1 : 0,
+                        type: 'Uint8',
+                        offset: offset++
+                    });
                 } else {
                     data[item] = data[item].split('').map(item => item.charCodeAt(0));
                     //Here is using a Uint8 to store the length of string, so the length of string can only be up to 255.
@@ -203,7 +209,7 @@
         if (template instanceof Object) {
             view = source instanceof DataView ? source : new DataView(source instanceof ArrayBuffer ? source : new Uint8Array(source).buffer);
             if (template instanceof Array && (template.length = view.getUint8(offset++))) {
-                template.join().split(',').forEach((item, i) => template[i] = extend(true, {}, template[0]));
+                template.join().split(',').forEach((item, i) => template[i] = extend(true, template[0] instanceof Array ? [] : {}, template[0]));
             }
             if (template instanceof Array && template[0] instanceof Object) {
                 template.forEach(item => offset = _decode(offset, item, view));
@@ -246,6 +252,8 @@
                                 offset += 8;
                                 break;
                         }
+                    } else if (template[item] === 'boolean') {
+                        template[item] = !!view.getUint8(offset++);
                     } else {
                         template[item] = (template[item] = view.getUint8(offset++)) ? String.fromCharCode.apply(null, new Array(template[item]).join().split(',').map(() => {
                             let code = view.getUint16(offset);
