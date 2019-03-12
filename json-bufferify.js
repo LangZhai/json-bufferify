@@ -13,7 +13,7 @@
      * @param {any} args = ([deep, ]target, source1[, ...sourceN])
      * @return {any} The result.
      */
-    let extend = ...args => {
+    let extend = (...args) => {
         let val,
             deep;
         if (typeof args[0] === 'boolean') {
