@@ -61,7 +61,7 @@ ws.send(bufferify.encode(0, {
 ### Revert ArrayBuffer to JSON.
 
 ```javascript
-ws.on('message', (data) => {
+ws.on('message', data => {
     console.log(bufferify.decode(0, {
         name: 'string',
         sex: 'number',
@@ -98,7 +98,7 @@ ws.send(bufferify.encode(0, [1, 2, 3, 4, 5, 6, 7, 8, 9]));
 ```
 
 ```javascript
-ws.on('message', (data) => {
+ws.on('message', data => {
     console.log(bufferify.decode(0, ['number'], data));
 });
 ```
@@ -130,7 +130,7 @@ ws.send(bufferify.encode(0, {
 ```
 
 ```javascript
-ws.on('message', (data) => {
+ws.on('message', data => {
     console.log(bufferify.decode(0, {
         arr: ['number'],
         obj: {
