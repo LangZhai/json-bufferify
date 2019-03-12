@@ -7,13 +7,13 @@
  * Project home: https://github.com/LangZhai/json-bufferify
  */
 
-((bufferify) => {
+(bufferify => {
     /**
      * Extend anything.
      * @param {any} args = ([deep, ]target, source1[, ...sourceN])
      * @return {any} The result.
      */
-    let extend = (...args) => {
+    let extend = ...args => {
         let val,
             deep;
         if (typeof args[0] === 'boolean') {
@@ -22,7 +22,7 @@
         } else {
             val = [].slice.call(args);
         }
-        val.forEach((obj) => {
+        val.forEach(obj => {
             if (obj instanceof Object) {
                 Object.keys(obj).forEach(item => val[0][item] = deep ? extend(deep, obj[item] instanceof Array ? [] : {}, obj[item]) : obj[item]);
             } else {
