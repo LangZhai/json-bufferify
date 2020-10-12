@@ -1,4 +1,4 @@
-# [json-bufferify](https://github.com/LangZhai/json-bufferify) [![Travis](https://img.shields.io/travis/LangZhai/json-bufferify.svg)](https://travis-ci.org/LangZhai/json-bufferify/builds) [![npm (tag)](https://img.shields.io/npm/v/json-bufferify.svg)](https://www.npmjs.com/package/json-bufferify) ![Github file size](https://img.shields.io/github/size/langzhai/json-bufferify/json-bufferify.js.svg)
+# [json-bufferify](https://github.com/LangZhai/json-bufferify) [![Travis (.org)](https://img.shields.io/travis/LangZhai/json-bufferify)](https://travis-ci.org/LangZhai/json-bufferify/builds) [![npm](https://img.shields.io/npm/v/json-bufferify)](https://www.npmjs.com/package/json-bufferify) ![GitHub file size in bytes](https://img.shields.io/github/size/LangZhai/json-bufferify/dist/json-bufferify.js)
 
 This is a module to help you convert between JSON and ArrayBuffer, and you can run it in both Node.js and browser.
 
@@ -145,6 +145,6 @@ ws.on('message', data => {
 });
 ```
 
-## License [![npm](https://img.shields.io/npm/l/json-bufferify.svg)](https://github.com/LangZhai/json-bufferify/blob/master/LICENSE)
+## License [![NPM](https://img.shields.io/npm/l/json-bufferify)](https://github.com/LangZhai/json-bufferify/blob/master/LICENSE)
 
 This is licensed under the GNU LGPL, version 3 or later.

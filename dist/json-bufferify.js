@@ -13,7 +13,7 @@
      * @param {any} args = ([deep, ]target, source1[, ...sourceN])
      * @return {any} The result.
      */
-    let extend = (...args) => {
+    const extend = (...args) => {
         let val,
             deep;
         if (typeof args[0] === 'boolean') {
@@ -38,14 +38,14 @@
      * @param {Object} data The JSON data.
      * @return {DataView} The DataView of the ArrayBuffer.
      */
-    let encode = (offset, data) => {
+    const encode = (offset, data) => {
         let arr = [],
             view = new DataView(new ArrayBuffer(_encode(offset, arr, data)));
         arr.forEach(item => {
             view[`set${item.type}`](item.offset, item.val);
         });
         return view;
-    }
+    };
 
     /**
      * Inner function to Convert JSON to ArrayBuffer.
@@ -54,7 +54,7 @@
      * @param {Object} data The JSON data.
      * @return {number} The start of the next call.
      */
-    let _encode = (offset, arr, data) => {
+    const _encode = (offset, arr, data) => {
         if (data instanceof Array) {
             //Here is using a Uint8 to store the length of Array, so the length of Array can only be up to 255.
             arr.push({
@@ -183,7 +183,7 @@
             });
         }
         return offset;
-    }
+    };
 
     /**
      * Revert ArrayBuffer to JSON.
@@ -192,7 +192,7 @@
      * @param {(ArrayBuffer|Buffer|DataView)} source The ArrayBuffer, or the Buffer in Node.js, or the DataView of the ArrayBuffer.
      * @return {Object} The JSON data.
      */
-    let decode = (offset, template, source) => {
+    const decode = (offset, template, source) => {
         _decode(offset, template, source);
         return template;
     };
@@ -204,7 +204,7 @@
      * @param {(ArrayBuffer|Buffer|DataView)} source The ArrayBuffer, or the Buffer in Node.js, or the DataView of the ArrayBuffer.
      * @return {number} The start of the next call.
      */
-    let _decode = (offset, template, source) => {
+    const _decode = (offset, template, source) => {
         let view;
         if (template instanceof Object) {
             view = source instanceof DataView ? source : new DataView(source instanceof ArrayBuffer ? source : new Uint8Array(source).buffer);

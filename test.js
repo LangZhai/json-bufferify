@@ -1,4 +1,4 @@
-var bufferify = require('./json-bufferify');
+const bufferify = require('./dist/json-bufferify');
 
 console.log(bufferify.decode(10, {
     name: 'string',
