@@ -145,6 +145,6 @@ ws.on('message', data => {
 });
 ```
 
-## License [![npm](https://img.shields.io/npm/l/json-bufferify.svg)](http://www.gnu.org/licenses/lgpl.html)
+## License [![npm](https://img.shields.io/npm/l/json-bufferify.svg)](https://github.com/LangZhai/json-bufferify/blob/master/LICENSE)
 
 This is licensed under the GNU LGPL, version 3 or later.
