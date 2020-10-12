@@ -8,6 +8,41 @@
  */
 
 (bufferify => {
+    const types = {
+        Uint8: {
+            val: 0,
+            offset: 1
+        },
+        Int8: {
+            val: 1,
+            offset: 1
+        },
+        Uint16: {
+            val: 2,
+            offset: 2
+        },
+        Int16: {
+            val: 3,
+            offset: 2
+        },
+        Uint32: {
+            val: 4,
+            offset: 4
+        },
+        Int32: {
+            val: 5,
+            offset: 4
+        },
+        Float32: {
+            val: 6,
+            offset: 4
+        },
+        Float64: {
+            val: 7,
+            offset: 8
+        }
+    };
+
     /**
      * Extend anything.
      * @param {any} args = ([deep, ]target, source1[, ...sourceN])
@@ -24,7 +59,7 @@
         }
         val.forEach(obj => {
             if (obj instanceof Object) {
-                Object.keys(obj).forEach(item => val[0][item] = deep ? extend(deep, obj[item] instanceof Array ? [] : {}, obj[item]) : obj[item]);
+                Object.keys(obj).forEach(key => val[0][key] = deep ? extend(deep, obj[key] instanceof Array ? [] : {}, obj[key]) : obj[key]);
             } else {
                 val[0] = obj;
             }
@@ -64,118 +99,52 @@
             });
         }
         if (data instanceof Array && data[0] instanceof Object) {
-            data.forEach(item => offset = _encode(offset, arr, item));
+            data.forEach(obj => offset = _encode(offset, arr, obj));
         } else {
-            Object.keys(data).sort().forEach(item => {
-                let current,
-                    flag = false;
-                if (data[item] instanceof Object) {
-                    offset = _encode(offset, arr, data[item]);
-                } else if (typeof data[item] === 'number') {
-                    arr.push({
-                        val: data[item]
-                    });
-                    current = arr[arr.length - 1];
-                    if (data[item] % 1 || (flag = data[item] < Math.pow(-2, 31) || data[item] > Math.pow(2, 32) - 1)) {
-                        if (!flag && data[item] >= -3.4e38 && data[item] <= 3.4e38) {
-                            arr.splice(arr.length - 1, 0, {
-                                val: 6,
-                                type: 'Uint8',
-                                offset: offset++
-                            });
-                            current.type = 'Float32';
-                            current.offset = offset;
-                            offset += 4;
-                        } else {
-                            arr.splice(arr.length - 1, 0, {
-                                val: 7,
-                                type: 'Uint8',
-                                offset: offset++
-                            });
-                            current.type = 'Float64';
-                            current.offset = offset;
-                            offset += 8;
-                        }
+            Object.keys(data).sort().forEach(key => {
+                if (data[key] instanceof Object) {
+                    offset = _encode(offset, arr, data[key]);
+                } else if (typeof data[key] === 'number') {
+                    let flag,
+                        type;
+                    if (data[key] % 1 || (flag = data[key] < Math.pow(-2, 31) || data[key] > Math.pow(2, 32) - 1)) {
+                        type = flag || data[key] < -3.4e38 || data[key] > 3.4e38 ? 'Float64' : 'Float32';
                     } else {
-                        if (data[item] >= 0) {
-                            if (data[item] < Math.pow(2, 8)) {
-                                arr.splice(arr.length - 1, 0, {
-                                    val: 0,
-                                    type: 'Uint8',
-                                    offset: offset++
-                                });
-                                current.type = 'Uint8';
-                                current.offset = offset;
-                                offset += 1;
-                            } else if (data[item] < Math.pow(2, 16)) {
-                                arr.splice(arr.length - 1, 0, {
-                                    val: 2,
-                                    type: 'Uint8',
-                                    offset: offset++
-                                });
-                                current.type = 'Uint16';
-                                current.offset = offset;
-                                offset += 2;
-                            } else if (data[item] < Math.pow(2, 32)) {
-                                arr.splice(arr.length - 1, 0, {
-                                    val: 4,
-                                    type: 'Uint8',
-                                    offset: offset++
-                                });
-                                current.type = 'Uint32';
-                                current.offset = offset;
-                                offset += 4;
-                            }
+                        if (data[key] < 0) {
+                            type = data[key] > Math.pow(-2, 7) ? 'Int8' : data[key] > Math.pow(-2, 15) ? 'Int16' : 'Int32';
                         } else {
-                            if (data[item] > Math.pow(-2, 7)) {
-                                arr.splice(arr.length - 1, 0, {
-                                    val: 1,
-                                    type: 'Uint8',
-                                    offset: offset++
-                                });
-                                current.type = 'Int8';
-                                current.offset = offset;
-                                offset += 1;
-                            } else if (data[item] > Math.pow(-2, 15)) {
-                                arr.splice(arr.length - 1, 0, {
-                                    val: 3,
-                                    type: 'Uint8',
-                                    offset: offset++
-                                });
-                                current.type = 'Int16';
-                                current.offset = offset;
-                                offset += 2;
-                            } else if (data[item] > Math.pow(-2, 31)) {
-                                arr.splice(arr.length - 1, 0, {
-                                    val: 5,
-                                    type: 'Uint8',
-                                    offset: offset++
-                                });
-                                current.type = 'Int32';
-                                current.offset = offset;
-                                offset += 4;
-                            }
+                            type = data[key] < Math.pow(2, 8) ? 'Uint8' : data[key] < Math.pow(2, 16) ? 'Uint16' : 'Uint32';
                         }
                     }
-                } else if (typeof data[item] === 'boolean') {
                     arr.push({
-                        val: data[item] ? 1 : 0,
+                        val: types[type].val,
+                        type: 'Uint8',
+                        offset: offset++
+                    }, {
+                        val: data[key],
+                        type,
+                        offset
+                    });
+                    offset += types[type].offset;
+                } else if (typeof data[key] === 'boolean') {
+                    arr.push({
+                        val: data[key] ? 1 : 0,
                         type: 'Uint8',
                         offset: offset++
                     });
                 } else {
-                    data[item] = data[item].split('').map(item => item.charCodeAt(0));
+                    data[key] = data[key].split('').map(char => char.charCodeAt(0));
                     //Here is using a Uint8 to store the length of string, so the length of string can only be up to 255.
                     arr.push({
-                        val: data[item].length,
+                        val: data[key].length,
                         type: 'Uint8',
                         offset: offset++
                     });
-                    data[item].forEach(item => {
+                    data[key].forEach(val => {
                         arr.push({
-                            val: item,
+                            val,
                             type: 'Uint16',
-                            offset: offset
+                            offset
                         });
                         offset += 2;
                     });
