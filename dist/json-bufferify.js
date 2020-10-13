@@ -57,11 +57,11 @@
         } else {
             val = args.slice();
         }
-        val.forEach(obj => {
-            if (obj instanceof Object) {
-                Object.keys(obj).forEach(key => val[0][key] = deep ? extend(deep, obj[key] instanceof Array ? [] : {}, obj[key]) : obj[key]);
+        val.forEach(v => {
+            if (v instanceof Object) {
+                Object.keys(v).forEach(key => val[0][key] = deep ? extend(deep, v[key] instanceof Array ? [] : {}, v[key]) : v[key]);
             } else {
-                val[0] = obj;
+                val[0] = v;
             }
         });
         return val[0];
