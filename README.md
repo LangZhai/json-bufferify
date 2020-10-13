@@ -1,11 +1,11 @@
 # [json-bufferify](https://github.com/LangZhai/json-bufferify) [![Travis (.org)](https://img.shields.io/travis/LangZhai/json-bufferify)](https://travis-ci.org/LangZhai/json-bufferify/builds) [![npm](https://img.shields.io/npm/v/json-bufferify)](https://www.npmjs.com/package/json-bufferify) ![GitHub file size in bytes](https://img.shields.io/github/size/LangZhai/json-bufferify/dist/json-bufferify.min.js)
 
-This is a module to help you convert between JSON and ArrayBuffer, and you can run it in both Node.js and browser.
+This is a tiny module to help you convert between JSON data and ArrayBuffer, and you can use it in both Node.js and browsers.
 
 ## Feature
 
-* Convert JSON to ArrayBuffer.
-* Revert ArrayBuffer to JSON.
+* Convert JSON data to ArrayBuffer.
+* Revert JSON data from ArrayBuffer.
 
 ## Installation
 
@@ -15,15 +15,23 @@ npm install json-bufferify
 
 ## Usage
 
-### Require json-bufferify.
+### Import json-bufferify.
 
 __In Node.js__
 
+CommonJS
+
 ```javascript
-var bufferify = require('json-bufferify');
+const bufferify = require('json-bufferify');
 ```
 
-__In browser__
+ES6 Modules
+
+```javascript
+import bufferify from 'json-bufferify';
+```
+
+__In browsers__
 
 ```html
 <script src="json-bufferify.js"></script>
@@ -46,10 +54,10 @@ Open "egretProperties.json" and Add the following code to "modules" node.
 }
 ```
 
-### Convert JSON to ArrayBuffer and send by WebSocket.
+### Convert JSON data to ArrayBuffer and send via WebSocket.
 
 ```javascript
-var ws = new WebSocket(url);
+let ws = new WebSocket(url);
 ws.binaryType = 'arraybuffer';
 ws.send(bufferify.encode(0, {
     sex: 0,
@@ -58,7 +66,7 @@ ws.send(bufferify.encode(0, {
 }));
 ```
 
-### Revert ArrayBuffer to JSON.
+### Revert JSON data from ArrayBuffer.
 
 ```javascript
 ws.on('message', data => {
@@ -70,21 +78,21 @@ ws.on('message', data => {
 });
 ```
 
-## Documentation
+## API
 
 ### bufferify.encode(offset, data)
 
-Convert JSON to ArrayBuffer and return the DataView.
+Convert JSON data to ArrayBuffer and return the DataView.
 
-* `offset` - The start of the DataView where to store the data.
+* `offset` - The start point of the DataView where to store the data.
 * `data` - The JSON data.
 
 ### bufferify.decode(offset, template, source)
 
-Revert ArrayBuffer to JSON data and return it.
+Revert JSON data from ArrayBuffer and return it.
 
-* `offset` - The start of the DataView where to read the data.
-* `template` - The template of the JSON.
+* `offset` - The start point of the DataView where to read the data.
+* `template` - The template of the JSON data.
 * `source` - The ArrayBuffer, or the Buffer in Node.js, or the DataView of the ArrayBuffer.
 
 ## Example
@@ -92,7 +100,7 @@ Revert ArrayBuffer to JSON data and return it.
 ### Convert/Revert an array.
 
 ```javascript
-var ws = new WebSocket(url);
+let ws = new WebSocket(url);
 ws.binaryType = 'arraybuffer';
 ws.send(bufferify.encode(0, [1, 2, 3, 4, 5, 6, 7, 8, 9]));
 ```
@@ -106,7 +114,7 @@ ws.on('message', data => {
 ### Convert/Revert a complex Object.
 
 ```javascript
-var ws = new WebSocket(url);
+let ws = new WebSocket(url);
 ws.binaryType = 'arraybuffer';
 ws.send(bufferify.encode(0, {
     obj: {
@@ -144,6 +152,11 @@ ws.on('message', data => {
     }, data));
 });
 ```
+
+## Compatibility
+
+* The latest LTS version of Node.js.
+* Modern browsers such as Chrome, Firefox, Edge(Chromium-based), Safari.
 
 ## License [![NPM](https://img.shields.io/npm/l/json-bufferify)](https://github.com/LangZhai/json-bufferify/blob/master/LICENSE)
 
