@@ -8,40 +8,40 @@
  */
 
 (bufferify => {
-    const types = {
-        Uint8: {
-            val: 0,
+    const types = [
+        {
+            type: 'Uint8',
             offset: 1
         },
-        Int8: {
-            val: 1,
+        {
+            type: 'Int8',
             offset: 1
         },
-        Uint16: {
-            val: 2,
+        {
+            type: 'Uint16',
             offset: 2
         },
-        Int16: {
-            val: 3,
+        {
+            type: 'Int16',
             offset: 2
         },
-        Uint32: {
-            val: 4,
+        {
+            type: 'Uint32',
             offset: 4
         },
-        Int32: {
-            val: 5,
+        {
+            type: 'Int32',
             offset: 4
         },
-        Float32: {
-            val: 6,
+        {
+            type: 'Float32',
             offset: 4
         },
-        Float64: {
-            val: 7,
+        {
+            type: 'Float64',
             offset: 8
         }
-    };
+    ];
 
     /**
      * Extend anything.
@@ -52,10 +52,10 @@
         let val,
             deep;
         if (typeof args[0] === 'boolean') {
-            val = [].slice.call(args, 1);
+            val = args.slice(1);
             deep = args[0];
         } else {
-            val = [].slice.call(args);
+            val = args.slice();
         }
         val.forEach(obj => {
             if (obj instanceof Object) {
@@ -76,8 +76,8 @@
     const encode = (offset, data) => {
         let arr = [],
             view = new DataView(new ArrayBuffer(_encode(offset, arr, data)));
-        arr.forEach(item => {
-            view[`set${item.type}`](item.offset, item.val);
+        arr.forEach(obj => {
+            view[`set${obj.type}`](obj.offset, obj.val);
         });
         return view;
     };
@@ -106,26 +106,26 @@
                     offset = _encode(offset, arr, data[key]);
                 } else if (typeof data[key] === 'number') {
                     let flag,
-                        type;
+                        val;
                     if (data[key] % 1 || (flag = data[key] < Math.pow(-2, 31) || data[key] > Math.pow(2, 32) - 1)) {
-                        type = flag || data[key] < -3.4e38 || data[key] > 3.4e38 ? 'Float64' : 'Float32';
+                        val = flag || data[key] < -3.4e38 || data[key] > 3.4e38 ? 7 : 6;
                     } else {
                         if (data[key] < 0) {
-                            type = data[key] > Math.pow(-2, 7) ? 'Int8' : data[key] > Math.pow(-2, 15) ? 'Int16' : 'Int32';
+                            val = data[key] > Math.pow(-2, 7) ? 1 : data[key] > Math.pow(-2, 15) ? 3 : 5;
                         } else {
-                            type = data[key] < Math.pow(2, 8) ? 'Uint8' : data[key] < Math.pow(2, 16) ? 'Uint16' : 'Uint32';
+                            val = data[key] < Math.pow(2, 8) ? 0 : data[key] < Math.pow(2, 16) ? 2 : 4;
                         }
                     }
                     arr.push({
-                        val: types[type].val,
+                        val,
                         type: 'Uint8',
                         offset: offset++
                     }, {
                         val: data[key],
-                        type,
+                        type: types[val].type,
                         offset
                     });
-                    offset += types[type].offset;
+                    offset += types[val].offset;
                 } else if (typeof data[key] === 'boolean') {
                     arr.push({
                         val: data[key] ? 1 : 0,
@@ -178,53 +178,22 @@
         if (template instanceof Object) {
             view = source instanceof DataView ? source : new DataView(source instanceof ArrayBuffer ? source : new Uint8Array(source).buffer);
             if (template instanceof Array && (template.length = view.getUint8(offset++))) {
-                template.join().split(',').forEach((item, i) => template[i] = extend(true, template[0] instanceof Array ? [] : {}, template[0]));
+                template.fill(null, 1).forEach((tmpl, i) => template[i] = extend(true, template[0] instanceof Array ? [] : {}, template[0]));
             }
             if (template instanceof Array && template[0] instanceof Object) {
-                template.forEach(item => offset = _decode(offset, item, view));
+                template.forEach(tmpl => offset = _decode(offset, tmpl, view));
             } else {
-                Object.keys(template).sort().forEach(item => {
-                    if (template[item] instanceof Object) {
-                        offset = _decode(offset, template[item], view);
-                    } else if (template[item] === 'number') {
-                        switch (view.getUint8(offset++)) {
-                            case 0:
-                                template[item] = view.getUint8(offset);
-                                offset += 1;
-                                break;
-                            case 1:
-                                template[item] = view.getInt8(offset);
-                                offset += 1;
-                                break;
-                            case 2:
-                                template[item] = view.getUint16(offset);
-                                offset += 2;
-                                break;
-                            case 3:
-                                template[item] = view.getInt16(offset);
-                                offset += 2;
-                                break;
-                            case 4:
-                                template[item] = view.getUint32(offset);
-                                offset += 4;
-                                break;
-                            case 5:
-                                template[item] = view.getInt32(offset);
-                                offset += 4;
-                                break;
-                            case 6:
-                                template[item] = view.getFloat32(offset);
-                                offset += 4;
-                                break;
-                            case 7:
-                                template[item] = view.getFloat64(offset);
-                                offset += 8;
-                                break;
-                        }
-                    } else if (template[item] === 'boolean') {
-                        template[item] = !!view.getUint8(offset++);
+                Object.keys(template).sort().forEach(key => {
+                    if (template[key] instanceof Object) {
+                        offset = _decode(offset, template[key], view);
+                    } else if (template[key] === 'number') {
+                        let obj = types[view.getUint8(offset++)];
+                        template[key] = view[`get${obj.type}`](offset);
+                        offset += obj.offset;
+                    } else if (template[key] === 'boolean') {
+                        template[key] = !!view.getUint8(offset++);
                     } else {
-                        template[item] = (template[item] = view.getUint8(offset++)) ? String.fromCharCode.apply(null, new Array(template[item]).join().split(',').map(() => {
+                        template[key] = (template[key] = view.getUint8(offset++)) ? String.fromCharCode(...Array(template[key]).fill().map(() => {
                             let code = view.getUint16(offset);
                             offset += 2;
                             return code;
