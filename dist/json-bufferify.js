@@ -1,7 +1,7 @@
 /**
- * json-bufferify 0.1.2
- * Date: 2017-11-13
- * © 2017 LangZhai(智能小菜菜)
+ * json-bufferify 0.2.0
+ * Date: 2020-10-13
+ * © 2017-2020 LangZhai(智能小菜菜)
  * This is licensed under the GNU LGPL, version 3 or later.
  * For details, see: https://www.gnu.org/licenses/lgpl.html
  * Project home: https://github.com/LangZhai/json-bufferify
@@ -68,7 +68,7 @@
     };
 
     /**
-     * Convert JSON to ArrayBuffer.
+     * Convert JSON data to ArrayBuffer.
      * @param {number} offset The start of the DataView where to store the data.
      * @param {Object} data The JSON data.
      * @return {DataView} The DataView of the ArrayBuffer.
@@ -83,7 +83,7 @@
     };
 
     /**
-     * Inner function to Convert JSON to ArrayBuffer.
+     * Inner function to Convert JSON data to ArrayBuffer.
      * @param {number} offset The start of the DataView where to store the data.
      * @param {Array} arr The data Array which for use in function 'encode'.
      * @param {Object} data The JSON data.
@@ -155,9 +155,9 @@
     };
 
     /**
-     * Revert ArrayBuffer to JSON.
+     * Revert JSON data from ArrayBuffer.
      * @param {number} offset The start of the DataView where to read the data.
-     * @param {Object} template The template of the JSON.
+     * @param {Object} template The template of the JSON data.
      * @param {(ArrayBuffer|Buffer|DataView)} source The ArrayBuffer, or the Buffer in Node.js, or the DataView of the ArrayBuffer.
      * @return {Object} The JSON data.
      */
@@ -167,9 +167,9 @@
     };
 
     /**
-     * Inner function to Revert ArrayBuffer to JSON.
+     * Inner function to Revert JSON data from ArrayBuffer.
      * @param {number} offset The start of the DataView where to read the data.
-     * @param {Object} template The template of the JSON.
+     * @param {Object} template The template of the JSON data.
      * @param {(ArrayBuffer|Buffer|DataView)} source The ArrayBuffer, or the Buffer in Node.js, or the DataView of the ArrayBuffer.
      * @return {number} The start of the next call.
      */
