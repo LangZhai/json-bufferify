@@ -1,7 +1,7 @@
 {
   "name": "json-bufferify",
   "version": "0.1.2",
-  "main": "dist/json-bufferify.js",
+  "main": "dist/json-bufferify.min.js",
   "types": "dist/json-bufferify.d.ts",
   "description": "This is a module to help you convert between JSON and ArrayBuffer, and you can run it in both Node.js and browser.",
   "author": {

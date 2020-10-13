@@ -1,4 +1,4 @@
-const bufferify = require('./dist/json-bufferify');
+const bufferify = require('./dist/json-bufferify.min.js');
 
 console.log(bufferify.decode(10, {
     name: 'string',
