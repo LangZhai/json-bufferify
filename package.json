@@ -17,11 +17,11 @@
     "url": "git+https://github.com/LangZhai/json-bufferify.git"
   },
   "bugs": {
-    "url": "https://github.com/LangZhai/json-bufferify/issues"
+    "url": "https://github.com/LangZhai/json-bufferify/issues",
+    "email": "zl2012xyz@hotmail.com"
   },
   "homepage": "https://langzhai.github.io/json-bufferify",
   "main": "dist/json-bufferify.min.js",
-  "types": "dist/json-bufferify.d.ts",
   "scripts": {
     "test": "node test"
   }
