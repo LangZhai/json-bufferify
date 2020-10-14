@@ -1,6 +1,6 @@
 {
   "name": "json-bufferify",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": {
     "name": "LangZhai",
     "url": "https://langzhai.github.io"
@@ -22,6 +22,7 @@
   },
   "homepage": "https://langzhai.github.io/json-bufferify",
   "main": "dist/json-bufferify.min.js",
+  "types": "types/json-bufferify.d.ts",
   "scripts": {
     "test": "node test"
   }
