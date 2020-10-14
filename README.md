@@ -2,7 +2,7 @@
 
 This is a tiny module to help you convert between JSON data and ArrayBuffer, and you can use it in both Node.js and browsers.
 
-## Feature
+## Features
 
 * Convert JSON data to ArrayBuffer.
 * Revert JSON data from ArrayBuffer.
@@ -15,19 +15,15 @@ npm install json-bufferify
 
 ## Usage
 
-### Import json-bufferify.
+### Step 0 - Import json-bufferify.
 
 __In Node.js__
 
-CommonJS
-
 ```javascript
+// CommonJS
 const bufferify = require('json-bufferify');
-```
 
-ES6 Modules
-
-```javascript
+// ES6 Modules
 import bufferify from 'json-bufferify';
 ```
 
@@ -39,8 +35,12 @@ __In browsers__
 
 __In TypeScript__
 
-```javascript
+```typescript
+// Traditional style
 import bufferify = require('json-bufferify');
+
+// ES6 Modules
+import bufferify from 'json-bufferify';
 ```
 
 __In Egret__
@@ -54,7 +54,7 @@ Open "egretProperties.json" and Add the following code to "modules" node.
 }
 ```
 
-### Convert JSON data to ArrayBuffer and send via WebSocket.
+### Step 1 - Convert JSON data to ArrayBuffer and send via WebSocket.
 
 ```javascript
 let ws = new WebSocket(url);
@@ -66,7 +66,7 @@ ws.send(bufferify.encode(0, {
 }));
 ```
 
-### Revert JSON data from ArrayBuffer.
+### Step 2 - Revert JSON data from ArrayBuffer.
 
 ```javascript
 ws.on('message', data => {
@@ -78,7 +78,7 @@ ws.on('message', data => {
 });
 ```
 
-## API
+## APIs
 
 ### bufferify.encode(offset, data)
 
@@ -95,7 +95,7 @@ Revert JSON data from ArrayBuffer and return it.
 * `template` - The template of the JSON data.
 * `source` - The ArrayBuffer, or the Buffer in Node.js, or the DataView of the ArrayBuffer.
 
-## Example
+## Examples
 
 ### Convert/Revert an array.
 
